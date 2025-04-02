@@ -67,7 +67,7 @@ const STATIC_ACCOUNT_DATA: usize = size_of::<Account>() + MAX_PERMITTED_DATA_INC
 /// ```ignore
 /// fn process_instruction(
 ///     program_id: &Address,      // Address of the account the program was loaded into
-///     accounts: &[AccountInfo], // All accounts required to process the instruction
+///     accounts: &[AccountView], // All accounts required to process the instruction
 ///     instruction_data: &[u8],  // Serialized instruction-specific data
 /// ) -> ProgramResult;
 /// ```
@@ -93,7 +93,7 @@ const STATIC_ACCOUNT_DATA: usize = size_of::<Account>() + MAX_PERMITTED_DATA_INC
 /// pub mod entrypoint {
 ///
 ///     use pinocchio::{
-///         account_info::AccountInfo,
+///         AccountView,
 ///         entrypoint,
 ///         msg,
 ///         Address::Address,
@@ -104,7 +104,7 @@ const STATIC_ACCOUNT_DATA: usize = size_of::<Account>() + MAX_PERMITTED_DATA_INC
 ///
 ///     pub fn process_instruction(
 ///         program_id: &Address,
-///         accounts: &[AccountInfo],
+///         accounts: &[AccountView],
 ///         instruction_data: &[u8],
 ///     ) -> ProgramResult {
 ///         msg!("Hello from my program!");
@@ -171,8 +171,8 @@ macro_rules! program_entrypoint {
         /// Program entrypoint.
         #[no_mangle]
         pub unsafe extern "C" fn entrypoint(input: *mut u8) -> u64 {
-            const UNINIT: core::mem::MaybeUninit<$crate::account_info::AccountInfo> =
-                core::mem::MaybeUninit::<$crate::account_info::AccountInfo>::uninit();
+            const UNINIT: core::mem::MaybeUninit<$crate::AccountView> =
+                core::mem::MaybeUninit::<$crate::AccountView>::uninit();
             // Create an array of uninitialized account infos.
             let mut accounts = [UNINIT; $maximum];
 
@@ -180,7 +180,7 @@ macro_rules! program_entrypoint {
                 $crate::entrypoint::deserialize::<$maximum>(input, &mut accounts);
 
             // Call the program's entrypoint passing `count` account infos; we know that
-            // they are initialized so we cast the pointer to a slice of `[AccountInfo]`.
+            // they are initialized so we cast the pointer to a slice of `[AccountView]`.
             match $process_instruction(
                 &program_id,
                 core::slice::from_raw_parts(accounts.as_ptr() as _, count),

@@ -1,7 +1,7 @@
 use core::slice::from_raw_parts;
 
 use pinocchio::{
-    account_info::AccountInfo,
+    account_view::AccountView,
     address::Address,
     instruction::{AccountMeta, Instruction, Signer},
     program::invoke_signed,
@@ -26,9 +26,9 @@ pub enum AuthorityType {
 ///   1. `[SIGNER]` The current authority of the mint or account.
 pub struct SetAuthority<'a> {
     /// Account (Mint or Token)
-    pub account: &'a AccountInfo,
+    pub account: &'a AccountView,
     /// Authority of the Account.
-    pub authority: &'a AccountInfo,
+    pub authority: &'a AccountView,
     /// The type of authority to update.
     pub authority_type: AuthorityType,
     /// The new authority

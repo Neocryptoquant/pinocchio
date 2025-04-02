@@ -1,5 +1,5 @@
 use pinocchio::{
-    account_info::AccountInfo,
+    account_view::AccountView,
     address::Address,
     cpi::invoke,
     instruction::{AccountMeta, Instruction},
@@ -20,13 +20,13 @@ use pinocchio::{
 ///   2. `[]` Rent sysvar
 pub struct InitializeNonceAccount<'a, 'b> {
     /// Nonce account.
-    pub account: &'a AccountInfo,
+    pub account: &'a AccountView,
 
     /// Recent blockhashes sysvar.
-    pub recent_blockhashes_sysvar: &'a AccountInfo,
+    pub recent_blockhashes_sysvar: &'a AccountView,
 
     /// Rent sysvar.
-    pub rent_sysvar: &'a AccountInfo,
+    pub rent_sysvar: &'a AccountView,
 
     /// Indicates the entity authorized to execute nonce
     /// instruction on the account
