@@ -34,7 +34,7 @@ impl InitializeAccount<'_> {
             AccountMeta::readonly(self.rent_sysvar.key()),
         ];
 
-        let instruction = Instruction {
+        let instruction = InstructionView {
             program_id: &crate::ID,
             accounts: &account_metas,
             data: &[1],

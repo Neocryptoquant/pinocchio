@@ -5,7 +5,7 @@ use pinocchio::{
     program_error::ProgramError,
 };
 
-use crate::ID;
+use crate::{state::AccountState, ID};
 
 /// Token account data.
 #[repr(C)]

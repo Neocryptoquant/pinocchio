@@ -1,7 +1,5 @@
 //! Syscall functions.
 
-use crate::instruction::{AccountMeta, ProcessedSiblingInstruction};
-
 #[cfg(target_feature = "static-syscalls")]
 macro_rules! define_syscall {
     (fn $name:ident($($arg:ident: $typ:ty),*) -> $ret:ty) => {
