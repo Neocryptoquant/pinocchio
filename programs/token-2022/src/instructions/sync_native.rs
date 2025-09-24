@@ -1,5 +1,5 @@
 use pinocchio::{
-    account_info::AccountInfo,
+    account_view::AccountView,
     address::Address,
     cpi::invoke,
     instruction::{AccountMeta, Instruction},
@@ -14,7 +14,7 @@ use pinocchio::{
 ///      lamports.
 pub struct SyncNative<'a, 'b> {
     /// Native Token Account
-    pub native_token: &'a AccountInfo,
+    pub native_token: &'a AccountView,
     /// Token Program
     pub token_program: &'b Address,
 }

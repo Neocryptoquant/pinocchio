@@ -27,7 +27,7 @@
 //! [`env_logger`]: https://docs.rs/env_logger
 //! [`RpcClient::get_transaction`]: https://docs.rs/solana-rpc-client/latest/solana_rpc_client/rpc_client/struct.RpcClient.html#method.get_transaction
 
-use solana_account_view::AccountView;
+use crate::account_view::AccountView;
 
 /// Print a message to the log.
 ///
@@ -131,7 +131,7 @@ pub fn sol_log_slice(slice: &[u8]) {
 ///
 /// - `accounts` - A slice of [`AccountView`].
 /// - `data` - The instruction data.
-pub fn sol_log_params(accounts: &[AccountInfo], data: &[u8]) {
+pub fn sol_log_params(accounts: &[AccountView], data: &[u8]) {
     #[cfg(target_os = "solana")]
     {
         for (i, account) in accounts.iter().enumerate() {
@@ -146,7 +146,8 @@ pub fn sol_log_params(accounts: &[AccountInfo], data: &[u8]) {
             msg!("- Account data length");
             sol_log_64(0, 0, 0, 0, account.data_len() as u64);
             msg!("- Owner");
-            account.owner().log();
+            // SAFETY: The reference to `owner` in only used for logging.
+            unsafe { account.owner().log() };
         }
         msg!("Instruction data");
         sol_log_slice(data);

@@ -2,14 +2,12 @@
 //! input buffer.
 
 use crate::{
-    account_info::{Account, AccountInfo},
+    account_view::{Account, AccountView},
     entrypoint::{NON_DUP_MARKER, STATIC_ACCOUNT_DATA},
     program_error::ProgramError,
     BPF_ALIGN_OF_U128,
 };
 use solana_address::Address;
-
-use crate::{program_error::ProgramError, BPF_ALIGN_OF_U128, NON_DUP_MARKER};
 
 /// Declare the lazy program entrypoint.
 ///
@@ -270,7 +268,7 @@ impl InstructionContext {
             self.buffer = self.buffer.add((*account).data_len as usize);
             self.buffer = self.buffer.add(self.buffer.align_offset(BPF_ALIGN_OF_U128));
 
-            MaybeAccount::Account(AccountInfo { raw: account })
+            MaybeAccount::Account(AccountView::new_unchecked(account))
         } else {
             // The caller will handle the mapping to the original account.
             MaybeAccount::Duplicated((*account).borrow_state)

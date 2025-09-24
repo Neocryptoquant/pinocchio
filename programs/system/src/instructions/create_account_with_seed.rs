@@ -45,11 +45,11 @@ pub struct CreateAccountWithSeed<'a, 'b, 'c> {
 impl<'a, 'b, 'c> CreateAccountWithSeed<'a, 'b, 'c> {
     #[inline(always)]
     pub fn with_minimal_balance(
-        from: &'a AccountInfo,
-        to: &'a AccountInfo,
-        base: Option<&'a AccountInfo>,
+        from: &'a AccountView,
+        to: &'a AccountView,
+        base: Option<&'a AccountView>,
         seed: &'b str,
-        rent_sysvar: &'a AccountInfo,
+        rent_sysvar: &'a AccountView,
         space: u64,
         owner: &'c Address,
     ) -> Result<Self, ProgramError> {

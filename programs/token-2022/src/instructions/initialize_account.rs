@@ -1,5 +1,5 @@
 use pinocchio::{
-    account_info::AccountInfo,
+    account_view::AccountView,
     address::Address,
     cpi::invoke,
     instruction::{AccountMeta, Instruction},
@@ -15,13 +15,13 @@ use pinocchio::{
 ///   3. `[]` Rent sysvar
 pub struct InitializeAccount<'a, 'b> {
     /// New Account.
-    pub account: &'a AccountInfo,
+    pub account: &'a AccountView,
     /// Mint Account.
-    pub mint: &'a AccountInfo,
+    pub mint: &'a AccountView,
     /// Owner of the new Account.
-    pub owner: &'a AccountInfo,
+    pub owner: &'a AccountView,
     /// Rent Sysvar Account
-    pub rent_sysvar: &'a AccountInfo,
+    pub rent_sysvar: &'a AccountView,
     /// Token Program
     pub token_program: &'b Address,
 }

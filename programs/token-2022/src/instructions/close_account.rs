@@ -1,5 +1,5 @@
 use pinocchio::{
-    account_info::AccountInfo,
+    account_view::AccountView,
     address::Address,
     instruction::{AccountMeta, Instruction, Signer},
     program::invoke_signed,
@@ -14,11 +14,11 @@ use pinocchio::{
 ///   2. `[SIGNER]` The account's owner.
 pub struct CloseAccount<'a, 'b> {
     /// Token Account.
-    pub account: &'a AccountInfo,
+    pub account: &'a AccountView,
     /// Destination Account
-    pub destination: &'a AccountInfo,
+    pub destination: &'a AccountView,
     /// Owner Account
-    pub authority: &'a AccountInfo,
+    pub authority: &'a AccountView,
     /// Token Program
     pub token_program: &'b Address,
 }

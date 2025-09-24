@@ -1,7 +1,7 @@
 use core::mem::MaybeUninit;
 
 use pinocchio::{
-    account_info::AccountInfo,
+    account_view::AccountView,
     cpi::{slice_invoke_signed, MAX_CPI_ACCOUNTS},
     instruction::{AccountMeta, Instruction, Signer},
     program_error::ProgramError,
@@ -14,7 +14,7 @@ use pinocchio::{
 ///   0. `..+N` `[SIGNER]` N signing accounts
 pub struct Memo<'a, 'b, 'c> {
     /// Signing accounts
-    pub signers: &'b [&'a AccountInfo],
+    pub signers: &'b [&'a AccountView],
     /// Memo
     pub memo: &'c str,
 }
