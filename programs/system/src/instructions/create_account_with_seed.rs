@@ -1,12 +1,11 @@
-use pinocchio::{
-    account_view::AccountView,
-    address::Address,
-    instruction::{AccountMeta, Instruction, Signer},
-    program::invoke_signed,
-    program_error::ProgramError,
-    sysvars::rent::Rent,
-    ProgramResult,
+use pinocchio::sysvars::rent::Rent;
+use solana_account_view::AccountView;
+use solana_address::Address;
+use solana_instruction_view::{
+    cpi::{invoke_signed, Signer},
+    AccountPrivilege, InstructionView,
 };
+use solana_program_error::{ProgramError, ProgramResult};
 
 /// Create a new account at an address derived from a base address and a seed.
 ///
@@ -75,10 +74,10 @@ impl<'a, 'b, 'c> CreateAccountWithSeed<'a, 'b, 'c> {
     #[inline(always)]
     pub fn invoke_signed(&self, signers: &[Signer]) -> ProgramResult {
         // account metadata
-        let account_metas: [AccountMeta; 3] = [
-            AccountMeta::writable_signer(self.from.key()),
-            AccountMeta::writable(self.to.key()),
-            AccountMeta::readonly_signer(self.base.unwrap_or(self.from).key()),
+        let account_metas: [AccountPrivilege; 3] = [
+            AccountPrivilege::writable_signer(self.from.key()),
+            AccountPrivilege::writable(self.to.key()),
+            AccountPrivilege::readonly_signer(self.base.unwrap_or(self.from).key()),
         ];
 
         // instruction data

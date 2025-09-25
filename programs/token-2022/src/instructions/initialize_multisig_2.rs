@@ -1,13 +1,9 @@
 use core::{mem::MaybeUninit, slice};
 
-use pinocchio::{
-    account_view::AccountView,
-    address::Address,
-    cpi::invoke_with_bounds,
-    instruction::{AccountMeta, Instruction},
-    program_error::ProgramError,
-    ProgramResult,
-};
+use solana_account_view::AccountView;
+use solana_address::Address;
+use solana_instruction_view::{cpi::invoke_with_bounds, AccountPrivilege, InstructionView};
+use solana_program_error::{ProgramError, ProgramResult};
 
 use crate::instructions::MAX_MULTISIG_SIGNERS;
 
@@ -49,7 +45,8 @@ impl InitializeMultisig2<'_, '_, '_> {
         let num_accounts = 1 + signers.len();
 
         // Account metadata
-        const UNINIT_META: MaybeUninit<AccountMeta> = MaybeUninit::<AccountMeta>::uninit();
+        const UNINIT_META: MaybeUninit<AccountPrivilege> =
+            MaybeUninit::<AccountPrivilege>::uninit();
         let mut acc_metas = [UNINIT_META; 1 + MAX_MULTISIG_SIGNERS];
 
         unsafe {
@@ -58,11 +55,11 @@ impl InitializeMultisig2<'_, '_, '_> {
             // - Index 0 is always present
             acc_metas
                 .get_unchecked_mut(0)
-                .write(AccountMeta::writable(multisig.key()));
+                .write(AccountPrivilege::writable(multisig.key()));
         }
 
         for (account_meta, signer) in acc_metas[1..].iter_mut().zip(signers.iter()) {
-            account_meta.write(AccountMeta::readonly(signer.key()));
+            account_meta.write(AccountPrivilege::readonly(signer.key()));
         }
 
         // Instruction data layout:
@@ -70,7 +67,7 @@ impl InitializeMultisig2<'_, '_, '_> {
         // -  [1]: m (1 byte, u8)
         let data = &[19, m];
 
-        let instruction = Instruction {
+        let instruction = InstructionView {
             program_id: token_program,
             accounts: unsafe { slice::from_raw_parts(acc_metas.as_ptr() as _, num_accounts) },
             data,

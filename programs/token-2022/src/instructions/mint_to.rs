@@ -1,12 +1,12 @@
 use core::slice::from_raw_parts;
 
-use pinocchio::{
-    account_view::AccountView,
-    address::Address,
-    instruction::{AccountMeta, Instruction, Signer},
-    program::invoke_signed,
-    ProgramResult,
+use solana_account_view::AccountView;
+use solana_address::Address;
+use solana_instruction_view::{
+    cpi::{invoke_signed, Signer},
+    AccountPrivilege, InstructionView,
 };
+use solana_program_error::ProgramResult;
 
 use crate::{write_bytes, UNINIT_BYTE};
 
@@ -38,10 +38,10 @@ impl MintTo<'_, '_> {
     #[inline(always)]
     pub fn invoke_signed(&self, signers: &[Signer]) -> ProgramResult {
         // account metadata
-        let account_metas: [AccountMeta; 3] = [
-            AccountMeta::writable(self.mint.key()),
-            AccountMeta::writable(self.account.key()),
-            AccountMeta::readonly_signer(self.mint_authority.key()),
+        let account_metas: [AccountPrivilege; 3] = [
+            AccountPrivilege::writable(self.mint.key()),
+            AccountPrivilege::writable(self.account.key()),
+            AccountPrivilege::readonly_signer(self.mint_authority.key()),
         ];
 
         // Instruction data layout:
@@ -54,7 +54,7 @@ impl MintTo<'_, '_> {
         // Set amount as u64 at offset [1..9]
         write_bytes(&mut instruction_data[1..9], &self.amount.to_le_bytes());
 
-        let instruction = Instruction {
+        let instruction = InstructionView {
             program_id: self.token_program,
             accounts: &account_metas,
             data: unsafe { from_raw_parts(instruction_data.as_ptr() as _, 9) },

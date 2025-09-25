@@ -3,7 +3,7 @@ use core::slice::from_raw_parts;
 use solana_account_view::AccountView;
 use solana_instruction_view::{
     cpi::{invoke_signed, Signer},
-    AccountMeta, InstructionView,
+    AccountPrivilege, InstructionView,
 };
 use solana_program_error::ProgramResult;
 
@@ -40,11 +40,11 @@ impl ApproveChecked<'_> {
     #[inline(always)]
     pub fn invoke_signed(&self, signers: &[Signer]) -> ProgramResult {
         // Account metadata
-        let account_metas: [AccountMeta; 4] = [
-            AccountMeta::writable(self.source.key()),
-            AccountMeta::readonly(self.mint.key()),
-            AccountMeta::readonly(self.delegate.key()),
-            AccountMeta::readonly_signer(self.authority.key()),
+        let account_metas: [AccountPrivilege; 4] = [
+            AccountPrivilege::writable(self.source.key()),
+            AccountPrivilege::readonly(self.mint.key()),
+            AccountPrivilege::readonly(self.delegate.key()),
+            AccountPrivilege::readonly_signer(self.authority.key()),
         ];
 
         // Instruction data

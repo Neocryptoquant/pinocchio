@@ -3,7 +3,7 @@ use solana_address::{Address, ADDRESS_BYTES};
 
 use crate::{
     account_view::{AccountView, Ref},
-    instruction::AccountMeta,
+    instruction_view::AccountPrivilege,
     program_error::ProgramError,
 };
 
@@ -241,7 +241,7 @@ impl IntrospectedAccountMeta {
 
     /// Convert the `IntrospectedAccountMeta` to an `AccountMeta`.
     #[inline(always)]
-    pub fn to_account_meta(&self) -> AccountMeta {
-        AccountMeta::new(&self.key, self.is_writable(), self.is_signer())
+    pub fn to_account_meta(&self) -> AccountPrivilege {
+        AccountPrivilege::new(&self.key, self.is_writable(), self.is_signer())
     }
 }

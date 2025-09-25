@@ -1,9 +1,6 @@
-use pinocchio::{
-    account_view::AccountView,
-    cpi::invoke,
-    instruction::{AccountMeta, Instruction},
-    ProgramResult,
-};
+use solana_account_view::AccountView;
+use solana_instruction_view::{cpi::invoke, AccountPrivilege, InstructionView};
+use solana_program_error::ProgramResult;
 
 /// Initialize a new Token Account.
 ///
@@ -27,11 +24,11 @@ impl InitializeAccount<'_> {
     #[inline(always)]
     pub fn invoke(&self) -> ProgramResult {
         // account metadata
-        let account_metas: [AccountMeta; 4] = [
-            AccountMeta::writable(self.account.key()),
-            AccountMeta::readonly(self.mint.key()),
-            AccountMeta::readonly(self.owner.key()),
-            AccountMeta::readonly(self.rent_sysvar.key()),
+        let account_metas: [AccountPrivilege; 4] = [
+            AccountPrivilege::writable(self.account.key()),
+            AccountPrivilege::readonly(self.mint.key()),
+            AccountPrivilege::readonly(self.owner.key()),
+            AccountPrivilege::readonly(self.rent_sysvar.key()),
         ];
 
         let instruction = InstructionView {

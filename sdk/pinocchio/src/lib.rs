@@ -235,6 +235,7 @@ pub use entrypoint::lazy as lazy_entrypoint;
 pub use solana_account_view as account_view;
 // Re-export the `solana_address` for downstream use.
 pub use solana_address as address;
+pub use solana_instruction_view as instruction_view;
 // Re-export the `solana_program_error` for downstream use.
 pub use solana_program_error as program_error;
 pub use solana_program_error::ProgramResult;

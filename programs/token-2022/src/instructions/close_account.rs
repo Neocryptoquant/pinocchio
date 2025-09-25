@@ -1,10 +1,10 @@
-use pinocchio::{
-    account_view::AccountView,
-    address::Address,
-    instruction::{AccountMeta, Instruction, Signer},
-    program::invoke_signed,
-    ProgramResult,
+use solana_account_view::AccountView;
+use solana_address::Address;
+use solana_instruction_view::{
+    cpi::{invoke_signed, Signer},
+    AccountPrivilege, InstructionView,
 };
+use solana_program_error::ProgramResult;
 
 /// Close an account by transferring all its SOL to the destination account.
 ///
@@ -32,13 +32,13 @@ impl CloseAccount<'_, '_> {
     #[inline(always)]
     pub fn invoke_signed(&self, signers: &[Signer]) -> ProgramResult {
         // account metadata
-        let account_metas: [AccountMeta; 3] = [
-            AccountMeta::writable(self.account.key()),
-            AccountMeta::writable(self.destination.key()),
-            AccountMeta::readonly_signer(self.authority.key()),
+        let account_metas: [AccountPrivilege; 3] = [
+            AccountPrivilege::writable(self.account.key()),
+            AccountPrivilege::writable(self.destination.key()),
+            AccountPrivilege::readonly_signer(self.authority.key()),
         ];
 
-        let instruction = Instruction {
+        let instruction = InstructionView {
             program_id: self.token_program,
             accounts: &account_metas,
             data: &[9],

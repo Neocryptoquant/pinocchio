@@ -1,10 +1,7 @@
-use pinocchio::{
-    account_view::AccountView,
-    address::Address,
-    cpi::invoke,
-    instruction::{AccountMeta, Instruction},
-    ProgramResult,
-};
+use solana_account_view::AccountView;
+use solana_address::Address;
+use solana_instruction_view::{cpi::invoke, AccountPrivilege, InstructionView};
+use solana_program_error::ProgramResult;
 
 /// Drive state of Uninitialized nonce account to Initialized, setting the nonce value.
 ///
@@ -37,10 +34,10 @@ impl InitializeNonceAccount<'_, '_> {
     #[inline(always)]
     pub fn invoke(&self) -> ProgramResult {
         // account metadata
-        let account_metas: [AccountMeta; 3] = [
-            AccountMeta::writable(self.account.key()),
-            AccountMeta::readonly(self.recent_blockhashes_sysvar.key()),
-            AccountMeta::readonly(self.rent_sysvar.key()),
+        let account_metas: [AccountPrivilege; 3] = [
+            AccountPrivilege::writable(self.account.key()),
+            AccountPrivilege::readonly(self.recent_blockhashes_sysvar.key()),
+            AccountPrivilege::readonly(self.rent_sysvar.key()),
         ];
 
         // instruction data

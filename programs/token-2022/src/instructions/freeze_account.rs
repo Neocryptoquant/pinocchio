@@ -1,10 +1,10 @@
-use pinocchio::{
-    account_view::AccountView,
-    address::Address,
-    instruction::{AccountMeta, Instruction, Signer},
-    program::invoke_signed,
-    ProgramResult,
+use solana_account_view::AccountView;
+use solana_address::Address;
+use solana_instruction_view::{
+    cpi::{invoke_signed, Signer},
+    AccountPrivilege, InstructionView,
 };
+use solana_program_error::ProgramResult;
 
 /// Freeze an Initialized account using the Mint's freeze authority
 ///
@@ -32,13 +32,13 @@ impl FreezeAccount<'_, '_> {
     #[inline(always)]
     pub fn invoke_signed(&self, signers: &[Signer]) -> ProgramResult {
         // account metadata
-        let account_metas: [AccountMeta; 3] = [
-            AccountMeta::writable(self.account.key()),
-            AccountMeta::readonly(self.mint.key()),
-            AccountMeta::readonly_signer(self.freeze_authority.key()),
+        let account_metas: [AccountPrivilege; 3] = [
+            AccountPrivilege::writable(self.account.key()),
+            AccountPrivilege::readonly(self.mint.key()),
+            AccountPrivilege::readonly_signer(self.freeze_authority.key()),
         ];
 
-        let instruction = Instruction {
+        let instruction = InstructionView {
             program_id: self.token_program,
             accounts: &account_metas,
             data: &[10],

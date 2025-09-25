@@ -1,9 +1,8 @@
 use core::mem::size_of;
-use pinocchio::{
-    account_view::{AccountView, Ref},
-    address::Address,
-    program_error::ProgramError,
-};
+
+use solana_account_view::{AccountView, Ref};
+use solana_address::Address;
+use solana_program_error::ProgramError;
 
 use crate::{instructions::MAX_MULTISIG_SIGNERS, ID};
 

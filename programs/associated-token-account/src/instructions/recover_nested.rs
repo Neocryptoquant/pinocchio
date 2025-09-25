@@ -1,7 +1,7 @@
 use solana_account_view::AccountView;
 use solana_instruction_view::{
     cpi::{invoke_signed, Signer},
-    AccountMeta, InstructionView,
+    AccountPrivilege, InstructionView,
 };
 use solana_program_error::ProgramResult;
 
@@ -50,14 +50,14 @@ impl RecoverNested<'_> {
     #[inline(always)]
     pub fn invoke_signed(&self, signers: &[Signer]) -> ProgramResult {
         // account metadata
-        let account_metas: [AccountMeta; 7] = [
-            AccountMeta::writable(self.account.key()),
-            AccountMeta::readonly(self.mint.key()),
-            AccountMeta::writable(self.destination_account.key()),
-            AccountMeta::readonly(self.owner_account.key()),
-            AccountMeta::readonly(self.owner_mint.key()),
-            AccountMeta::writable_signer(self.wallet.key()),
-            AccountMeta::readonly(self.token_program.key()),
+        let account_metas: [AccountPrivilege; 7] = [
+            AccountPrivilege::writable(self.account.key()),
+            AccountPrivilege::readonly(self.mint.key()),
+            AccountPrivilege::writable(self.destination_account.key()),
+            AccountPrivilege::readonly(self.owner_account.key()),
+            AccountPrivilege::readonly(self.owner_mint.key()),
+            AccountPrivilege::writable_signer(self.wallet.key()),
+            AccountPrivilege::readonly(self.token_program.key()),
         ];
 
         // Instruction data:

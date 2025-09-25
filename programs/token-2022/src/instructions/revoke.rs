@@ -1,10 +1,10 @@
-use pinocchio::{
-    account_view::AccountView,
-    address::Address,
-    instruction::{AccountMeta, Instruction, Signer},
-    program::invoke_signed,
-    ProgramResult,
+use solana_account_view::AccountView;
+use solana_address::Address;
+use solana_instruction_view::{
+    cpi::{invoke_signed, Signer},
+    AccountPrivilege, InstructionView,
 };
+use solana_program_error::ProgramResult;
 
 /// Revokes the delegate's authority.
 ///
@@ -29,12 +29,12 @@ impl Revoke<'_, '_> {
     #[inline(always)]
     pub fn invoke_signed(&self, signers: &[Signer]) -> ProgramResult {
         // account metadata
-        let account_metas: [AccountMeta; 2] = [
-            AccountMeta::writable(self.source.key()),
-            AccountMeta::readonly_signer(self.authority.key()),
+        let account_metas: [AccountPrivilege; 2] = [
+            AccountPrivilege::writable(self.source.key()),
+            AccountPrivilege::readonly_signer(self.authority.key()),
         ];
 
-        let instruction = Instruction {
+        let instruction = InstructionView {
             program_id: self.token_program,
             accounts: &account_metas,
             data: &[5],

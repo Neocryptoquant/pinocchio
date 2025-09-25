@@ -1,7 +1,7 @@
 use solana_account_view::AccountView;
 use solana_instruction_view::{
     cpi::{invoke_signed, Signer},
-    AccountMeta, InstructionView,
+    AccountPrivilege, InstructionView,
 };
 use solana_program_error::ProgramResult;
 
@@ -30,9 +30,9 @@ impl Transfer<'_> {
     #[inline(always)]
     pub fn invoke_signed(&self, signers: &[Signer]) -> ProgramResult {
         // account metadata
-        let account_metas: [AccountMeta; 2] = [
-            AccountMeta::writable_signer(self.from.key()),
-            AccountMeta::writable(self.to.key()),
+        let account_metas: [AccountPrivilege; 2] = [
+            AccountPrivilege::writable_signer(self.from.key()),
+            AccountPrivilege::writable(self.to.key()),
         ];
 
         // instruction data

@@ -3,7 +3,7 @@ use core::slice::from_raw_parts;
 use solana_account_view::AccountView;
 use solana_instruction_view::{
     cpi::{invoke_signed, Signer},
-    AccountMeta, InstructionView,
+    AccountPrivilege, InstructionView,
 };
 use solana_program_error::ProgramResult;
 
@@ -35,10 +35,10 @@ impl Burn<'_> {
     #[inline(always)]
     pub fn invoke_signed(&self, signers: &[Signer]) -> ProgramResult {
         // Account metadata
-        let account_metas: [AccountMeta; 3] = [
-            AccountMeta::writable(self.account.key()),
-            AccountMeta::writable(self.mint.key()),
-            AccountMeta::readonly_signer(self.authority.key()),
+        let account_metas: [AccountPrivilege; 3] = [
+            AccountPrivilege::writable(self.account.key()),
+            AccountPrivilege::writable(self.mint.key()),
+            AccountPrivilege::readonly_signer(self.authority.key()),
         ];
 
         // Instruction data

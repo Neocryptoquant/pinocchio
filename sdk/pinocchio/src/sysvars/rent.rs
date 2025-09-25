@@ -11,7 +11,6 @@ use crate::{
     program_error::ProgramError,
     sysvars::Sysvar,
 };
-use solana_address::Address;
 
 /// The ID of the rent sysvar.
 pub const RENT_ID: Address = Address::new_from_array([

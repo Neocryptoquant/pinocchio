@@ -1,10 +1,10 @@
-use pinocchio::{
-    account_view::AccountView,
-    address::Address,
-    instruction::{AccountMeta, Instruction, Signer},
-    program::invoke_signed,
-    ProgramResult,
+use solana_account_view::AccountView;
+use solana_address::Address;
+use solana_instruction_view::{
+    cpi::{invoke_signed, Signer},
+    AccountPrivilege, InstructionView,
 };
+use solana_program_error::ProgramResult;
 
 /// Transfer lamports from a derived address.
 ///
@@ -45,10 +45,10 @@ impl TransferWithSeed<'_, '_, '_> {
     #[inline(always)]
     pub fn invoke_signed(&self, signers: &[Signer]) -> ProgramResult {
         // account metadata
-        let account_metas: [AccountMeta; 3] = [
-            AccountMeta::writable(self.from.key()),
-            AccountMeta::readonly_signer(self.base.key()),
-            AccountMeta::writable(self.to.key()),
+        let account_metas: [AccountPrivilege; 3] = [
+            AccountPrivilege::writable(self.from.key()),
+            AccountPrivilege::readonly_signer(self.base.key()),
+            AccountPrivilege::writable(self.to.key()),
         ];
 
         // instruction data
